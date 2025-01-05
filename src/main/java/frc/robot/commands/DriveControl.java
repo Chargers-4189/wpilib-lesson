@@ -5,14 +5,25 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.Joystick;
+
 
 public class driveControl extends Command {
   /** Creates a new driveControl. */
   private DriveSubsystem DriveSubsystem;
+
+  public Joystick leftShaft;
+  public Joystick rightShaft;
+
+
+  
+
    
-  public driveControl() {
+  public DriveControl(DriveSubsystem driveSubsystem, Joystick leftShaft, Joystick rightShaft) {
     this.DriveSubsystem = driveSubsystem;
-    return(driveSubsystem);
+    this.leftShaft = leftShaft;
+    this.rightShaft = rightShaft;
+    //return(driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -20,17 +31,22 @@ public class driveControl extends Command {
   @Override
   public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    //set motor speed to x and y of joystick
+    driveSubsystem.arcadeDrive((leftShaft.getY()), (leftShaft.getX()));
 
-  // Called once the command ends or is interrupted.
+
+  }
+
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+ 
+  }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
     return false;
   }
 }

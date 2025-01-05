@@ -43,6 +43,10 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+
+    private Joystick leftShaft = new Joystick(OperatorConstants.kDriverJoystickLeft);
+    private Joystick rightShaft = new Joystick(OperatorConstants.kDriverJoystickRight);
+
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
   }
@@ -54,6 +58,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    m_robotDrive.setDefaultCommand(new DriveControl(driveSubsystem, leftShaft, rightShaft));
   }
 
   public DriveSubsystem getRobotDrive() {

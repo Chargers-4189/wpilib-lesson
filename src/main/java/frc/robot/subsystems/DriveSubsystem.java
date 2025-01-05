@@ -10,14 +10,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AHRS_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
+import edu.wpi.first.wpilibj.motorcontrol.TalonFX;
+import edu.wpi.first.wpilibj.simulation.AHRS_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -26,33 +26,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  private final PWMSparkMax m_leftLeader = new PWMSparkMax(DriveConstants.kLeftMotor1Port);
-  private final PWMSparkMax m_leftFollower = new PWMSparkMax(DriveConstants.kLeftMotor2Port);
+  private final TalonFX m_leftLeader = new TalonFX(DriveConstants.kLeftMotor1Port);
+  private final TalonFX m_leftFollower = new TalonFX(DriveConstants.kLeftMotor2Port);
 
   // The motors on the right side of the drive.
-  private final PWMSparkMax m_rightLeader = new PWMSparkMax(DriveConstants.kRightMotor1Port);
-  private final PWMSparkMax m_rightFollower = new PWMSparkMax(DriveConstants.kRightMotor2Port);
+  private final TalonFX m_rightLeader = new TalonFX(DriveConstants.kRightMotor1Port);
+  private final TalonFX m_rightFollower = new TalonFX(DriveConstants.kRightMotor2Port);
 
   // The robot's drive
   private final DifferentialDrive m_drive =
       new DifferentialDrive(m_leftLeader::set, m_rightLeader::set);
 
   // The left-side drive encoder
-  private final Encoder m_leftEncoder =
-      new Encoder(
+/* 
+  private final CANCoder m_leftEncoder =
+      new CANCoder(
           DriveConstants.kLeftEncoderPorts[0],
           DriveConstants.kLeftEncoderPorts[1],
           DriveConstants.kLeftEncoderReversed);
 
   // The right-side drive encoder
-  private final Encoder m_rightEncoder =
-      new Encoder(
-          DriveConstants.kRightEncoderPorts[0],
-          DriveConstants.kRightEncoderPorts[1],
-          DriveConstants.kRightEncoderReversed);
-
+  private final CANCoder m_rightEncoder =
+    new CANCoder(
+            DriveConstants.kRightEncoderPorts[0],
+            DriveConstants.kRightEncoderPorts[1],
+            DriveConstants.kRightEncoderReversed);
+*/
   // The gyro sensor
-  private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  // This Is The Old One / private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro(); 
 
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
@@ -102,7 +104,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       // The encoder and gyro angle sims let us set simulated sensor readings
       m_leftEncoderSim = new EncoderSim(m_leftEncoder);
-      m_rightEncoderSim = new EncoderSim(m_rightEncoder);
+      m_rightEncoderSim = new EncodFerSim(m_rightEncoder);
       m_gyroSim = new ADXRS450_GyroSim(m_gyro);
 
       // the Field2d class lets us visualize our robot in the simulation GUI.
